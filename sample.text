@@ -1,0 +1,137 @@
+import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
+import {
+  Button,
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+
+export default function App() {
+  const [task, setTask] = useState("");
+  const [taskArray,setTaskArray] = useState([]);
+  function everyInputChange(inputText) {
+    setTask(inputText);
+  }
+
+  function addTasks(){
+    setTaskArray(() => 
+      [...taskArray,{text:task,id: Math.random().toString()}]
+    )
+  }
+
+  return (
+    <View style={styles.inputAndButton}>
+      <TextInput
+        editable
+        multiline
+        numberOfLines={4}
+        maxLength={40}
+        placeholder="Enter Your Task"
+        style={{
+          borderColor: "#20b2aa",
+          borderWidth: 2,
+          borderRadius: 20,
+          padding: 10,
+        }}
+        value={task}
+        onChangeText={everyInputChange}
+      />
+      <View
+        style={{
+          marginTop: 10,
+          width: "40%",
+          position: "relative",
+          left: "60%",
+        }}
+      >
+        <Button title="Add Task" onPress={addTasks} />
+      </View>
+      <View style={styles.SecondPartTasks}>
+        {taskArray.length > 0 ? (
+          <Text style={styles.YourTaskCss}>Your Tasks!</Text>
+        ) : null}
+
+        {/* <ScrollView>
+         {taskArray.map((TaskItems,index) => {
+          return (
+            <View key={index} style={styles.everyTaskItems}>
+              <Text>{index+1} : {TaskItems.text}  {TaskItems.id}</Text>
+            </View>
+          )
+        })}
+        </ScrollView> */}
+
+        <FlatList
+          data={taskArray}
+          renderItem={({item,index}) => {
+            return (
+              <View style={styles.everyTaskItems} >
+                <Text>
+                  {index + 1} : {item.text} and id : {item.id}
+                </Text>
+              </View>
+            )
+          } }
+        />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  inputAndButton: {
+    flex: 1,
+    marginTop: 50,
+    marginHorizontal: 20,
+  },
+  SecondPartTasks: {
+    flex: 5,
+    marginVertical: 10,
+  },
+  YourTaskCss: {
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+  everyTaskItems: {
+    margin: 10,
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: "#ffe4e1",
+  },
+});
+
+
+
+import { useState } from 'react';
+import TaskItem from './components/TaskItem';
+import { View, TextInput, Button, FlatList } from 'react-native';
+
+export default function App() {
+  const [task,setTask] = useState("")
+  const [taskArray, setTaskArray] = useState([]);
+  
+  function taskeIput(values){
+    setTask(values);
+    
+  }
+
+  function addTask() {
+    setTaskArray([...taskArray, { text: task, id: Math.random().toString() }]);
+  }
+
+  return (
+    <View >
+      <TextInput value={task} onChangeText={taskeIput} />
+      <Button title="Add Task" onPress={addTask} />
+      <FlatList
+        data={taskArray}
+        renderItem={({ item }) => <TaskItem task={item} />}
+        keyExtractor={(item) => item.id}
+      />
+    </View>
+  );
+}
